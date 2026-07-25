@@ -132,7 +132,7 @@ def test_no_gate_when_unset(monkeypatch):
     assert client.get("/health").status_code == 200
 
 
-@pytest.mark.parametrize("channel", ["reddit", "discord", "linkedin", "windinfo"])
+@pytest.mark.parametrize("channel", ["reddit", "discord", "linkedin", "windinfo", "sca"])
 def test_campaign_landing_paths_render_forecast(monkeypatch, channel):
     monkeypatch.delenv("GARDA_GATE_SECRET", raising=False)
     from garda import web
