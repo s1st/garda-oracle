@@ -183,6 +183,7 @@ def _date_short(day: date, lang: str) -> str:
 @app.get("/go/discord", response_class=HTMLResponse, include_in_schema=False)
 @app.get("/go/linkedin", response_class=HTMLResponse, include_in_schema=False)
 @app.get("/go/windinfo", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/go/sca", response_class=HTMLResponse, include_in_schema=False)
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     lang = _request_language(request)
