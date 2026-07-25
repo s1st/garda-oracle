@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Garda Oracle{% endblock %}</title>
+{% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --go: #2ea043;
+    --maybe: #d29922;
+    --no-go: #cf222e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+    margin: 0; padding: 24px;
+    max-width: 720px; margin-inline: auto;
+    line-height: 1.5;
+    position: relative;
+  }
+  h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; }
+  .lead { color: var(--muted); margin: 0 0 24px; font-size: 13px; }
+
+  .top-nav {
+    display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+    position: absolute; top: 24px; right: 24px;
+  }
+  @media (max-width: 520px) {
+    body { position: static; padding: 16px; overflow-x: hidden; }
+    .top-nav {
+      position: static; margin-bottom: 16px; gap: 8px;
+      align-items: flex-start;
+    }
+    .top-nav .page-links { flex: 1 1 100%; flex-wrap: wrap; }
+    .top-nav .lang-links {
+      margin-left: 0; padding-left: 0; border-left: 0;
+    }
+    .top-nav a.repo-link { margin-left: 0; }
+  }
+  .top-nav .page-links { display: flex; gap: 2px; }
+  .top-nav a.repo-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; margin-left: 5px; border-radius: 4px;
+    color: var(--muted); text-decoration: none;
+    transition: color .1s, background .1s;
+  }
+  .top-nav a.repo-link:hover { color: var(--text); background: var(--panel); }
+  .top-nav a.repo-link:focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; }
+  .top-nav a.repo-link svg { width: 17px; height: 17px; fill: currentColor; }
+  .top-nav .lang-links {
+    display: flex; gap: 2px; margin-left: 5px; padding-left: 7px;
+    border-left: 1px solid var(--border);
+  }
+  .top-nav a.page-link {
+    font-size: 13px; text-decoration: none; color: var(--muted);
+    padding: 4px 8px; border-radius: 4px;
+    transition: color .1s, background .1s;
+  }
+  .top-nav a.page-link:hover, .top-nav a.page-link.active { color: var(--text); background: var(--panel); }
+  .top-nav a.lang-link {
+    color: var(--muted); padding: 4px 5px; border-radius: 4px;
+    font-size: 16px; line-height: 1; text-decoration: none;
+  }
+  .top-nav a.lang-link:hover, .top-nav a.lang-link.active {
+    color: var(--text); background: var(--panel);
+  }
+
+  .live-panel { margin: 12px 0 20px; }
+  .live-box {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .live-box h4 {
+    margin: 0 0 8px; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .1em; font-weight: 500;
+  }
+  .live-now-line { font-size: 28px; font-weight: 700; line-height: 1; }
+  .live-now-line .unit { font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 2px; }
+  .live-gust { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .live-updated { color: var(--muted); font-size: 11px; margin-top: 8px; }
+  .live-unavailable { color: var(--muted); font-size: 13px; }
+  .spark { display: flex; gap: 3px; align-items: flex-end; height: 44px; margin-top: 10px; }
+  .spark div { flex: 1; max-width: 16px; background: var(--muted); opacity: .7; border-radius: 2px 2px 0 0; min-height: 2px; }
+
+  .day-block { margin-bottom: 22px; }
+  .day-head { font-size: 15px; font-weight: 600; margin: 0 0 8px; }
+  .day-head small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .regime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .regime-grid > * { min-width: 0; }
+  @media (max-width: 520px) { .regime-grid { grid-template-columns: 1fr; } }
+
+  .verdict-card {
+    padding: 14px 16px; border-radius: 10px;
+    border-left: 6px solid var(--border); background: var(--panel);
+  }
+  button.verdict-card {
+    display: block; width: 100%; color: inherit; font: inherit; text-align: left;
+    cursor: pointer; appearance: none;
+    transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  button.verdict-card:hover { transform: translateY(-1px); }
+  button.verdict-card:focus-visible { outline: 2px solid #58a6ff; outline-offset: 3px; }
+  .verdict-card.go    { background: rgba(46,160,67,.08);  border-left-color: var(--go); }
+  .verdict-card.maybe { background: rgba(210,153,34,.08); border-left-color: var(--maybe); }
+  .verdict-card.no_go { background: rgba(207,34,46,.08);  border-left-color: var(--no-go); }
+  .verdict-card.past { opacity: .55; }
+  .regime-name { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .verdict-word { margin: 4px 0 0; font-size: 26px; letter-spacing: .01em; font-weight: 700; line-height: 1; }
+  .verdict-word.go    { color: var(--go); }
+  .verdict-word.maybe { color: var(--maybe); }
+  .verdict-word.no_go { color: var(--no-go); }
+  .verdict-meta { color: var(--muted); font-size: 12px; margin-top: 6px; }
+  .drivers { margin-top: 8px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .drivers .for { color: var(--go); }
+  .drivers .against { color: var(--no-go); }
+
+  dialog {
+    width: min(560px, calc(100vw - 28px)); max-height: min(760px, calc(100vh - 28px));
+    overflow: auto; padding: 0; color: var(--text); background: var(--panel);
+    border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, .55);
+  }
+  dialog::backdrop { background: rgba(1, 4, 9, .78); }
+  .detail-head {
+    position: sticky; top: 0; z-index: 1; display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 16px; padding: 18px 20px 14px;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+  }
+  .detail-head h2 { margin: 0; font-size: 20px; }
+  .detail-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+  .dialog-close {
+    flex: 0 0 auto; padding: 3px 9px; color: var(--muted); background: transparent;
+    border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 18px;
+  }
+  .dialog-close:hover { color: var(--text); border-color: var(--muted); }
+  .detail-body { padding: 4px 20px 20px; }
+  .detail-intro { color: var(--muted); font-size: 12px; margin: 14px 0; }
+  .driver-detail { padding: 14px 0; border-top: 1px solid var(--border); }
+  .driver-detail:first-of-type { border-top: 0; }
+  .driver-detail-title { display: flex; justify-content: space-between; gap: 14px; }
+  .driver-detail-name { font-size: 14px; font-weight: 600; }
+  .driver-detail-value { color: var(--text); font-size: 13px; white-space: nowrap; }
+  .driver-effect { margin-top: 3px; font-size: 11px; font-weight: 600; }
+  .driver-effect.for { color: var(--go); }
+  .driver-effect.against { color: var(--no-go); }
+  .driver-explanation { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+  .other-drivers { margin-top: 4px; border-top: 1px solid var(--border); }
+  .other-drivers summary {
+    padding: 14px 0; color: var(--text); cursor: pointer; font-size: 13px;
+    font-weight: 600; list-style-position: outside; margin-left: 16px;
+  }
+  .other-drivers summary::marker { color: var(--muted); }
+  .other-drivers[open] summary { border-bottom: 1px solid var(--border); }
+  .other-drivers .driver-detail { padding-left: 2px; padding-right: 2px; }
+  .detail-caveat {
+    margin: 12px 0 0; padding: 10px 12px; color: var(--muted); background: var(--bg);
+    border-radius: 7px; font-size: 11px;
+  }
+
+  h2.page-title { margin: 0 0 4px; font-size: 24px; font-weight: 600; }
+  h3 { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; margin: 24px 0 8px; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-weight: 500; color: var(--muted); }
+
+  .stats-grid { display: flex; gap: 40px; margin: 8px 0 4px; flex-wrap: wrap; }
+  .stats-grid dt { color: var(--muted); font-size: 12px; }
+  .stats-grid dd { margin: 2px 0 0; font-size: 22px; font-weight: 600; }
+  .stats-grid dd.note { color: var(--muted); font-size: 12px; font-weight: 400; margin-top: 6px; }
+
+  .advanced-note { color: var(--muted); font-size: 12px; margin: 4px 0 12px; }
+  .advanced-note a { color: var(--muted); }
+
+  .rule-list { list-style: none; padding: 0; margin: 16px 0 0; }
+  .rule-list li { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .rule-list li:last-child { border-bottom: none; }
+  .rule-list .rule-name { font-weight: 600; font-size: 15px; }
+  .rule-list .rule-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .glossary { margin: 16px 0 0; }
+  .glossary dt { font-weight: 600; font-size: 14px; margin-top: 14px; scroll-margin-top: 16px; }
+  .glossary dt:first-child { margin-top: 0; }
+  .glossary dd { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+
+  .strip-row { margin-bottom: 10px; }
+  .strip-row-label { color: var(--muted); font-size: 11px; margin-bottom: 4px; letter-spacing: .04em; }
+  .strip { display: grid; grid-template-columns: repeat(30, 1fr); gap: 3px; }
+  .cell {
+    aspect-ratio: 1; border-radius: 3px; background: var(--panel);
+    border: 1px solid transparent; display: block;
+  }
+  .cell.go    { background: var(--go); }
+  .cell.maybe { background: var(--maybe); }
+  .cell.no_go { background: var(--no-go); }
+  .cell.empty { background: var(--panel); opacity: .35; }
+  .strip-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+  .strip-legend {
+    display: flex; flex-wrap: wrap; gap: 10px 16px;
+    color: var(--muted); font-size: 11px; margin-top: 8px;
+  }
+  .strip-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .strip-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .strip-legend i.go    { background: var(--go); }
+  .strip-legend i.maybe { background: var(--maybe); }
+  .strip-legend i.no_go { background: var(--no-go); }
+  .strip-legend i.empty { background: var(--panel); border: 1px solid var(--border); }
+
+  footer { color: var(--muted); font-size: 11px; margin-top: 32px; line-height: 1.6; }
+  footer a { color: var(--muted); }
+</style>
+{% if cf_beacon_token %}<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ cf_beacon_token }}"}'></script>{% endif %}
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="page-links">
+    <a class="page-link {% if active == 'index' %}active{% endif %}" href="/?lang={{ lang }}">{{ tr("nav_forecast") }}</a>
+    <a class="page-link {% if active == 'verlauf' %}active{% endif %}" href="/verlauf?lang={{ lang }}">{{ tr("nav_history") }}</a>
+    <a class="page-link {% if active == 'modell' %}active{% endif %}" href="/modell?lang={{ lang }}">{{ tr("nav_model") }}</a>
+    <a class="page-link {% if active == 'erklaerung' %}active{% endif %}" href="/erklaerung?lang={{ lang }}">{{ tr("nav_explanation") }}</a>
+  </div>
+  <a class="repo-link" href="https://github.com/s1st/garda-oracle"
+     target="_blank" rel="noopener" aria-label="{{ tr('github_repo') }}" title="{{ tr('github_repo') }}">
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 0C3.58 0 0 3.64 0 8.13c0 3.59 2.29 6.64 5.47 7.72.4.08.55-.18.55-.39 0-.19-.01-.84-.01-1.52-2.01.38-2.53-.5-2.69-.96-.09-.23-.48-.96-.82-1.15-.28-.15-.68-.53-.01-.54.63-.01 1.08.59 1.23.83.72 1.23 1.87.88 2.33.67.07-.53.28-.88.51-1.08-1.78-.21-3.64-.91-3.64-4.02 0-.89.31-1.63.82-2.2-.08-.21-.36-1.04.08-2.17 0 0 .67-.22 2.2.84A7.5 7.5 0 0 1 8 3.89a7.5 7.5 0 0 1 2 .27c1.53-1.06 2.2-.84 2.2-.84.44 1.13.16 1.96.08 2.17.51.57.82 1.31.82 2.2 0 3.12-1.87 3.81-3.65 4.02.29.25.54.74.54 1.5 0 1.08-.01 1.95-.01 2.22 0 .21.15.47.55.39A8.13 8.13 0 0 0 16 8.13C16 3.64 12.42 0 8 0Z"/>
+    </svg>
+  </a>
+  {% set language_flags = {"de": "🇩🇪", "en": "🇬🇧", "it": "🇮🇹"} %}
+  {% set language_names = {"de": "Deutsch", "en": "English", "it": "Italiano"} %}
+  <div class="lang-links" aria-label="Language · Sprache · Lingua">
+    {% for code in langs %}
+    <a class="lang-link {% if lang == code %}active{% endif %}" href="{{ current_path }}?lang={{ code }}"
+       lang="{{ code }}" hreflang="{{ code }}" aria-label="{{ language_names[code] }}"
+       title="{{ language_names[code] }}"><span aria-hidden="true">{{ language_flags[code] }}</span></a>
+    {% endfor %}
+  </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer>
+  {{ tr("footer_measurements") }}
+  <a href="https://dati.trentino.it/en/dataset/dati-recenti-delle-stazioni-meteo"
+     target="_blank" rel="noopener">Meteotrentino / Provincia Autonoma di Trento</a>
+  (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener">CC BY 4.0</a>).
+  {{ tr("footer_models") }}
+  <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+  (<a href="https://open-meteo.com/en/license" target="_blank" rel="license noopener">CC BY 4.0</a>).
+  {{ tr("footer_processed") }}
+  <br>
+  {{ tr("footer_sister") }} <a href="{{ walchensee_url }}/" target="_blank" rel="noopener">Walchi Thermic Oracle</a>.
+  {% if show_personal_link %}
+  {{ tr("footer_project") }} <a href="https://simon-stieber.de/" target="_blank" rel="noopener">Simon Stieber</a>.
+  {% endif %}
+  <br>
+  {{ tr("footer_source_prefix") }}
+  <a href="https://github.com/s1st/garda-oracle" target="_blank" rel="noopener">GitHub</a>
+  {{ tr("footer_license_prefix") }}
+  <a href="https://github.com/s1st/garda-oracle/blob/main/LICENSE"
+     target="_blank" rel="license noopener">{{ tr("footer_license_name") }}</a>.
+  {% if cf_beacon_token %}<br>{{ tr("footer_analytics") }}{% endif %}
+</footer>
+<script>
+  document.querySelectorAll("[data-dialog-id]").forEach(function (tile) {
+    tile.addEventListener("click", function () {
+      document.getElementById(tile.dataset.dialogId).showModal();
+    });
+  });
+  document.querySelectorAll("dialog").forEach(function (dialog) {
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>
+</body>
+</html>

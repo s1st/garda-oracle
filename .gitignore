@@ -1,0 +1,16 @@
+data/*
+!data/.gitkeep
+!data/README.md
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.DS_Store
+.env
+.env.*
+!.env.example

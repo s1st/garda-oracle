@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+{% block title %}{{ tr("explanation_title") }} · Garda Oracle{% endblock %}
+{% block content %}
+<h1>{{ tr("explanation_title") }}</h1>
+<p class="lead">{{ tr("explanation_lead") }}</p>
+
+<p>{{ tr("explanation_intro_1") | safe }}</p>
+
+<p>{{ tr("explanation_intro_2") | safe }}</p>
+
+<h3>{{ tr("main_drivers") }}</h3>
+<ul class="rule-list">
+  <li>
+    <div class="rule-name">{{ tr("pressure_title") }}</div>
+    <div class="rule-desc">{{ tr("pressure_desc") }}</div>
+  </li>
+  <li>
+    <div class="rule-name">{{ tr("sun_title") }}</div>
+    <div class="rule-desc">{{ tr("sun_desc") }}</div>
+  </li>
+  <li>
+    <div class="rule-name">{{ tr("flow_title") }}</div>
+    <div class="rule-desc">{{ tr("flow_desc") }}</div>
+  </li>
+  <li>
+    <div class="rule-name">{{ tr("rain_title") }}</div>
+    <div class="rule-desc">{{ tr("rain_desc") }}</div>
+  </li>
+  <li>
+    <div class="rule-name">{{ tr("heating_title") }}</div>
+    <div class="rule-desc">{{ tr("heating_desc") }}</div>
+  </li>
+</ul>
+
+<h3 id="glossar">{{ tr("glossary") }}</h3>
+<dl class="glossary">
+  <dt>Ora</dt>
+  <dd>{{ tr("ora_desc") }}</dd>
+  <dt>{{ tr("peler_term") }}</dt>
+  <dd>{{ tr("peler_desc") }}</dd>
+  <dt>GO / MAYBE / NO GO</dt>
+  <dd>{{ tr("verdicts_desc") }}</dd>
+  <dt>{{ tr("drivers_term") }}</dt>
+  <dd>{{ tr("drivers_desc") }}</dd>
+  <dt>{{ tr("onset_term") }}</dt>
+  <dd>{{ tr("onset_desc") }}</dd>
+</dl>
+
+<p class="advanced-note" style="margin-top:24px">
+  <a href="/modell?lang={{ lang }}">{{ tr("quality_link") }}</a>.
+</p>
+{% endblock %}

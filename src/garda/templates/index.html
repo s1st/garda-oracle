@@ -1,0 +1,115 @@
+{% extends "_base.html" %}
+{% block title %}Garda Oracle{% endblock %}
+{% block content %}
+<h1>Garda Oracle</h1>
+<p class="lead">{{ tr("index_lead") }}</p>
+
+<div class="live-panel">
+  <div class="live-box">
+    <h4>{{ tr("live_title") }}</h4>
+    {% if live and live.latest %}
+      <div class="live-now-line">
+        {{ num(live.latest.avg_kt, 1) }}<span class="unit"> kt · {{ live.latest.sector }} ({{ live.latest.dir }}°)</span>
+      </div>
+      <div class="live-gust">{{ tr("live_gusts", value=num(live.latest.gust_kt, 1)) }}</div>
+      <div class="spark">
+        {% for s in live.recent %}<div style="height: {{ [s.avg_kt * 2.4, 44] | min }}px" title="{{ s.time }} — {{ num(s.avg_kt, 1) }} kt"></div>{% endfor %}
+      </div>
+      <div class="live-updated">{{ tr("live_updated", time=live.latest.time) }}</div>
+    {% else %}
+      <div class="live-unavailable">{{ tr("live_unavailable") }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% for d in days %}
+{% set day_id = loop.index0 %}
+<section class="day-block">
+  <h2 class="day-head">{{ d.label }} <small>{{ d.date_label }}</small></h2>
+  {% if d.error %}
+    <p class="advanced-note">{{ tr("forecast_missing") }}</p>
+  {% else %}
+  <div class="regime-grid">
+    <button type="button" class="verdict-card {{ d.peler.verdict|lower }}{% if d.peler_past %} past{% endif %}"
+            data-dialog-id="details-{{ day_id }}-peler" aria-haspopup="dialog"
+            aria-controls="details-{{ day_id }}-peler">
+      <div class="regime-name">{{ tr("peler_card_time") }}</div>
+      <p class="verdict-word {{ d.peler.verdict|lower }}">{{ d.peler.verdict.replace("_", " ") }}</p>
+      <div class="verdict-meta">{{ tr("probability", value=(d.peler.probability * 100) | round | int) }}{% if d.peler_past %}{{ tr("past_today") }}{% endif %}</div>
+      <div class="drivers">
+        {% for dr in d.peler.drivers %}<span class="{{ 'for' if dr.contribution > 0 else 'against' }}">{{ '+' if dr.contribution > 0 else '−' }}</span> {{ dr.label }}{{ " · " if not loop.last }}{% endfor %}
+      </div>
+    </button>
+    <button type="button" class="verdict-card {{ d.ora.verdict|lower }}"
+            data-dialog-id="details-{{ day_id }}-ora" aria-haspopup="dialog"
+            aria-controls="details-{{ day_id }}-ora">
+      <div class="regime-name">{{ tr("ora_card_time") }}</div>
+      <p class="verdict-word {{ d.ora.verdict|lower }}">{{ d.ora.verdict.replace("_", " ") }}</p>
+      <div class="verdict-meta">{{ tr("probability", value=(d.ora.probability * 100) | round | int) }}</div>
+      <div class="drivers">
+        {% for dr in d.ora.drivers %}<span class="{{ 'for' if dr.contribution > 0 else 'against' }}">{{ '+' if dr.contribution > 0 else '−' }}</span> {{ dr.label }}{{ " · " if not loop.last }}{% endfor %}
+      </div>
+    </button>
+  </div>
+
+  {% for regime, forecast, regime_label, window in [
+      ("peler", d.peler, "Peler", tr("peler_dialog_time")),
+      ("ora", d.ora, "Ora", tr("ora_dialog_time"))
+  ] %}
+  <dialog id="details-{{ day_id }}-{{ regime }}" aria-labelledby="details-title-{{ day_id }}-{{ regime }}">
+    <div class="detail-head">
+      <div>
+        <h2 id="details-title-{{ day_id }}-{{ regime }}">{{ regime_label }} · {{ d.label }}</h2>
+        <p>{{ d.date_long }} · {{ window }} · {{ forecast.verdict.replace("_", " ") }}
+          · {{ tr("probability", value=(forecast.probability * 100) | round | int) }}</p>
+      </div>
+      <form method="dialog"><button class="dialog-close" aria-label="{{ tr('close') }}">×</button></form>
+    </div>
+    <div class="detail-body">
+      <p class="detail-intro">
+        {{ tr("dialog_intro") }}
+      </p>
+      {% for dr in forecast.drivers %}
+      <section class="driver-detail">
+        <div class="driver-detail-title">
+          <div class="driver-detail-name">{{ dr.label }}</div>
+          <div class="driver-detail-value">{{ dr.value_display }}</div>
+        </div>
+        <div class="driver-effect {{ 'for' if dr.contribution > 0 else 'against' }}">
+          {{ tr(("supports_" if dr.contribution > 0 else "opposes_") ~ regime) }}
+        </div>
+        <p class="driver-explanation">{{ dr.explanation }}</p>
+      </section>
+      {% endfor %}
+      {% if forecast.other_drivers %}
+      <details class="other-drivers">
+        <summary>{{ tr("other_factors", count=forecast.other_drivers | length) }}</summary>
+        {% for dr in forecast.other_drivers %}
+        <section class="driver-detail">
+          <div class="driver-detail-title">
+            <div class="driver-detail-name">{{ dr.label }}</div>
+            <div class="driver-detail-value">{{ dr.value_display }}</div>
+          </div>
+          <div class="driver-effect {{ 'for' if dr.contribution > 0 else 'against' }}">
+            {{ tr(("supports_" if dr.contribution > 0 else "opposes_") ~ regime) }}
+          </div>
+          <p class="driver-explanation">{{ dr.explanation }}</p>
+        </section>
+        {% endfor %}
+      </details>
+      {% endif %}
+      <p class="detail-caveat">
+        {{ tr("dialog_caveat") }}
+      </p>
+    </div>
+  </dialog>
+  {% endfor %}
+  {% endif %}
+</section>
+{% endfor %}
+
+<p class="advanced-note" style="margin-top:24px">
+  <a href="/modell?lang={{ lang }}">{{ tr("model_quality_link") }}</a>
+  · <a href="/erklaerung?lang={{ lang }}">{{ tr("how_link") }}</a>
+</p>
+{% endblock %}

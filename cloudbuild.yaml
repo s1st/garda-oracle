@@ -1,0 +1,23 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-f', '${_DOCKERFILE}', '-t', '${_IMAGE}', '.']
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', '${_IMAGE}']
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        if [ -n "${_DEPLOY_SERVICE}" ]; then
+          gcloud run services update "${_DEPLOY_SERVICE}" \
+            --region "${_DEPLOY_REGION}" \
+            --image "${_IMAGE}"
+        fi
+images: ['${_IMAGE}']
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _DOCKERFILE: Dockerfile
+  _IMAGE: europe-west3-docker.pkg.dev/walchi-oracle-prod/walchi/garda-dash:latest
+  _DEPLOY_SERVICE: garda-dash
+  _DEPLOY_REGION: europe-west1

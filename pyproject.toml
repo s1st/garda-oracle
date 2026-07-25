@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "garda-oracle"
+version = "0.1.0"
+description = "Explainable Ora and Peler wind forecasts for northern Lake Garda."
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [
+    { name = "Simon Stieber" },
+]
+keywords = ["weather", "wind", "lake-garda", "machine-learning", "fastapi"]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: FastAPI",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+]
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "jinja2>=3.1",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+ml = [
+    "scikit-learn>=1.4",
+    "pandas>=2.0",
+    "numpy>=1.24",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+]
+
+[project.urls]
+Homepage = "https://garda.simon-stieber.de/"
+Repository = "https://github.com/s1st/garda-oracle"
+Issues = "https://github.com/s1st/garda-oracle/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/garda"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true

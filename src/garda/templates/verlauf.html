@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+{% block title %}{{ tr("history_title") }} · Garda Oracle{% endblock %}
+{% block content %}
+<h1>{{ tr("history_title") }}</h1>
+<p class="lead">{{ tr("history_lead") }}</p>
+
+{% if strip is none %}
+<p class="advanced-note">{{ tr("history_unavailable") }}</p>
+{% else %}
+
+<h3>{{ tr("ora_midday") }}</h3>
+<div class="strip-row">
+  <div class="strip-row-label">{{ tr("model_previous_day") }}</div>
+  <div class="strip">
+    {% for c in strip.cells %}<span class="cell {{ c.ora_model }}" title="{{ c.label }} — {{ tr('model_label') }}: {{ c.ora_model.replace('_',' ')|upper }}"></span>{% endfor %}
+  </div>
+</div>
+<div class="strip-row">
+  <div class="strip-row-label">{{ tr("measured_ora") }}</div>
+  <div class="strip">
+    {% for c in strip.cells %}<span class="cell {{ c.ora_obs }}" title="{{ c.label }} — {{ tr('fired') if c.ora_obs == 'go' else (tr('not_fired') if c.ora_obs == 'no_go' else tr('no_data')) }}"></span>{% endfor %}
+  </div>
+  <div class="strip-labels"><span>{{ strip.cells[0].label }}</span><span>{{ strip.cells[-1].label }}</span></div>
+</div>
+{% if strip.summary.ora.decided %}
+<p class="advanced-note">{{ tr("history_summary",
+  correct=strip.summary.ora.correct,
+  decided=strip.summary.ora.decided,
+  percent=(100 * strip.summary.ora.correct / strip.summary.ora.decided) | round | int) }}</p>
+{% endif %}
+
+<h3>{{ tr("peler_early") }}</h3>
+<div class="strip-row">
+  <div class="strip-row-label">{{ tr("model_previous_day") }}</div>
+  <div class="strip">
+    {% for c in strip.cells %}<span class="cell {{ c.peler_model }}" title="{{ c.label }} — {{ tr('model_label') }}: {{ c.peler_model.replace('_',' ')|upper }}"></span>{% endfor %}
+  </div>
+</div>
+<div class="strip-row">
+  <div class="strip-row-label">{{ tr("measured_peler") }}</div>
+  <div class="strip">
+    {% for c in strip.cells %}<span class="cell {{ c.peler_obs }}" title="{{ c.label }} — {{ tr('fired') if c.peler_obs == 'go' else (tr('not_fired') if c.peler_obs == 'no_go' else tr('no_data')) }}"></span>{% endfor %}
+  </div>
+  <div class="strip-labels"><span>{{ strip.cells[0].label }}</span><span>{{ strip.cells[-1].label }}</span></div>
+</div>
+{% if strip.summary.peler.decided %}
+<p class="advanced-note">{{ tr("history_summary",
+  correct=strip.summary.peler.correct,
+  decided=strip.summary.peler.decided,
+  percent=(100 * strip.summary.peler.correct / strip.summary.peler.decided) | round | int) }}</p>
+{% endif %}
+
+<div class="strip-legend">
+  <span><i class="go"></i>{{ tr("legend_fired") }}</span>
+  <span><i class="maybe"></i>{{ tr("legend_maybe") }}</span>
+  <span><i class="no_go"></i>{{ tr("legend_not_fired") }}</span>
+  <span><i class="empty"></i>{{ tr("legend_no_data") }}</span>
+</div>
+
+<p class="advanced-note" style="margin-top:16px">
+  {{ tr("history_method") }}
+</p>
+{% endif %}
+{% endblock %}
