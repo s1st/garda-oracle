@@ -88,6 +88,7 @@ def _page_context(request: Request, active: str, **values) -> dict:
         "langs": SUPPORTED_LANGS,
         "current_path": request.url.path,
         "show_personal_link": not pseudonymous,
+        "manual_analytics": pseudonymous,
         "walchensee_url": (
             "https://walchensee.s1st.de" if pseudonymous else "https://walchensee.simon-stieber.de"
         ),
