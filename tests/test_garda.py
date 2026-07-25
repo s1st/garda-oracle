@@ -166,6 +166,7 @@ def test_pseudonymous_host_does_not_render_real_name_identity(monkeypatch):
     monkeypatch.setattr(web, "_forecast_points", no_forecast)
     monkeypatch.setattr(web, "_live_torbole", no_live_data)
     monkeypatch.setattr(web, "build_day_features", lambda points, day: None)
+    monkeypatch.setitem(web.templates.env.globals, "cf_beacon_token", "test-site-token")
 
     client = TestClient(web.app)
     r = client.get("/go/reddit", headers={"host": "garda.s1st.de"})
@@ -174,11 +175,21 @@ def test_pseudonymous_host_does_not_render_real_name_identity(monkeypatch):
     assert "https://walchensee.s1st.de/" in r.text
     assert "Simon Stieber" not in r.text
     assert "simon-stieber.de" not in r.text
+    assert "https://static.cloudflareinsights.com/beacon.min.js" in r.text
+    assert '"token": "test-site-token"' in r.text
 
     model_page = client.get("/modell", headers={"host": "garda.s1st.de"})
     assert model_page.status_code == 200
     assert "https://walchensee.s1st.de/stats" in model_page.text
     assert "simon-stieber.de" not in model_page.text
+
+    real_name_page = client.get(
+        "/",
+        headers={"host": "garda.simon-stieber.de", "X-Gate-Secret": "s3cret"},
+    )
+    assert real_name_page.status_code == 200
+    assert "https://static.cloudflareinsights.com/beacon.min.js" not in real_name_page.text
+    assert "test-site-token" not in real_name_page.text
 
 
 def test_unknown_campaign_landing_path_is_not_found(monkeypatch):

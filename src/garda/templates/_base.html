@@ -216,7 +216,7 @@
   footer { color: var(--muted); font-size: 11px; margin-top: 32px; line-height: 1.6; }
   footer a { color: var(--muted); }
 </style>
-{% if cf_beacon_token %}<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ cf_beacon_token }}"}'></script>{% endif %}
+{% if manual_analytics and cf_beacon_token %}<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ cf_beacon_token }}"}'></script>{% endif %}
 </head>
 <body>
 
@@ -266,7 +266,7 @@
   {{ tr("footer_license_prefix") }}
   <a href="https://github.com/s1st/garda-oracle/blob/main/LICENSE"
      target="_blank" rel="license noopener">{{ tr("footer_license_name") }}</a>.
-  {% if cf_beacon_token %}<br>{{ tr("footer_analytics") }}{% endif %}
+  {% if manual_analytics and cf_beacon_token %}<br>{{ tr("footer_analytics") }}{% endif %}
 </footer>
 <script>
   document.querySelectorAll("[data-dialog-id]").forEach(function (tile) {
