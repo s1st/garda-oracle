@@ -125,6 +125,40 @@ def test_gate_allows_exact_pseudonymous_custom_host(monkeypatch):
     assert client.get("/health", headers={"host": "garda.s1st.de.evil"}).status_code == 404
 
 
+def test_server_event_only_for_origin_protected_real_name_host(monkeypatch):
+    monkeypatch.setenv("GARDA_GATE_SECRET", "s3cret")
+    monkeypatch.setenv("TRAFFIC_HASH_SECRET", "traffic-secret")
+    from garda import web
+
+    events = []
+    monkeypatch.setattr(web, "emit_page_view", lambda **values: events.append(values))
+    client = TestClient(web.app)
+    browser_headers = {
+        "user-agent": "Mozilla/5.0 (Macintosh) Safari/605.1.15",
+    }
+
+    real = client.get(
+        "/erklaerung",
+        headers={
+            **browser_headers,
+            "host": "garda.simon-stieber.de",
+            "X-Gate-Secret": "s3cret",
+            "CF-Connecting-IP": "84.151.20.7",
+        },
+    )
+    assert real.status_code == 200
+    assert len(events) == 1
+    assert events[0]["client_ip"] == "84.151.20.7"
+    assert events[0]["path"] == "/erklaerung"
+
+    pseudonymous = client.get(
+        "/erklaerung",
+        headers={**browser_headers, "host": "garda.s1st.de"},
+    )
+    assert pseudonymous.status_code == 200
+    assert len(events) == 1
+
+
 def test_no_gate_when_unset(monkeypatch):
     monkeypatch.delenv("GARDA_GATE_SECRET", raising=False)
     from garda.web import app
