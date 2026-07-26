@@ -73,7 +73,7 @@ What I am taking away from the project:
 
 Live: <https://garda.simon-stieber.de/go/linkedin>
 
-Repository: **Add link after public release**
+Repository: <https://github.com/s1st/garda-oracle>
 
 ---
 

@@ -60,7 +60,8 @@ der tatsächlichen Vorhersage vom Vortag arbeitet?
 
 - Hero: Screenshot der drei Tageskarten
 - Zweites Bild: kleine Skizze Walchensee → Methode → Gardasee
-- Link: Live-Dashboard; Repository erst nach öffentlicher Freigabe ergänzen
+- Links: Live-Dashboard und
+  [GitHub-Repository](https://github.com/s1st/garda-oracle)
 
 ## Possible short opener
 

@@ -77,7 +77,7 @@ Was ich aus dem Projekt mitnehme:
 
 Live: <https://garda.simon-stieber.de/go/linkedin>
 
-Repository: **Link nach öffentlicher Freigabe ergänzen**
+Repository: <https://github.com/s1st/garda-oracle>
 
 ---
 

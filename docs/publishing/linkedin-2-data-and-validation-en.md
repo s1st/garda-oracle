@@ -71,6 +71,8 @@ In the third part, I will show how these experiments became a small public
 application with explainable forecasts, three languages, and an open-source
 training pipeline.
 
+Repository: <https://github.com/s1st/garda-oracle>
+
 ---
 
 ## Suggested media

@@ -60,7 +60,8 @@ reconstructed in hindsight?
 
 - Hero image: screenshot of the three daily forecast cards
 - Second image: a small Walchensee → method → Lake Garda diagram
-- Link: live dashboard; add the repository after public release
+- Links: live dashboard and
+  [GitHub repository](https://github.com/s1st/garda-oracle)
 
 ## Possible short opener
 
