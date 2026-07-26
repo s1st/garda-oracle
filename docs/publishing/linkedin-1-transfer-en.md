@@ -38,8 +38,9 @@ of day can be used to derive separate labels for Peler and Ora.
 
 The first result surprised me. Both wind systems were substantially more
 predictable than a simple monthly baseline. In year-wise cross-validation,
-Ora achieved a Peirce Skill Score of +0.54 and Peler +0.39. Their respective
-monthly climatologies reached only around +0.2.
+Ora achieved a Peirce Skill Score of +0.54 and Peler +0.39. As a simple
+baseline, I used only the historical frequency of each wind regime in a given
+month. This monthly climatology achieved a score of around +0.2.
 
 For this particular question, Lake Garda was not harder than the Walchensee. It
 was statistically clearer.
