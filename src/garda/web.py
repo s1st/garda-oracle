@@ -27,6 +27,7 @@ from fastapi.templating import Jinja2Templates
 from .features import PointSeries, build_day_features, fetch_forecast_points
 from .i18n import DEFAULT_LANG, SUPPORTED_LANGS, format_number, language, translate
 from .model import classify
+from .traffic import emit_page_view
 
 app = FastAPI(title="Garda Oracle")
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -102,12 +103,34 @@ def _page_context(request: Request, active: str, **values) -> dict:
 async def protect_origin_and_remember_language(request: Request, call_next):
     lang = _request_language(request)
     request.state.lang = lang
-    secret = os.environ.get("GARDA_GATE_SECRET")
+    gate_secret = os.environ.get("GARDA_GATE_SECRET")
     # garda.s1st.de is mapped directly through Google's custom-domain frontend
     # and therefore cannot receive the Cloudflare-injected origin header.
-    if secret and not _is_pseudonymous_host(request) and request.headers.get("x-gate-secret") != secret:
+    if (
+        gate_secret
+        and not _is_pseudonymous_host(request)
+        and request.headers.get("x-gate-secret") != gate_secret
+    ):
         return Response("Not found", status_code=404)
     response = await call_next(request)
+    # Only the Cloudflare-proxied, origin-protected host needs an application
+    # event. The direct s1st host has the real IP in Cloud Run's request log.
+    # Requiring the gate prevents trusting a spoofed CF-Connecting-IP header if
+    # origin protection is ever accidentally absent.
+    if gate_secret and _request_host(request) == _REAL_NAME_HOST:
+        try:
+            emit_page_view(
+                method=request.method,
+                status_code=response.status_code,
+                content_type=response.headers.get("content-type", ""),
+                user_agent=request.headers.get("user-agent", ""),
+                path=request.url.path,
+                host=_REAL_NAME_HOST,
+                client_ip=request.headers.get("cf-connecting-ip", ""),
+                hash_secret=os.environ.get("TRAFFIC_HASH_SECRET", ""),
+            )
+        except Exception:
+            pass  # Analytics must never affect the forecast response.
     return _remember_language(response, request, lang)
 
 
