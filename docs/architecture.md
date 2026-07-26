@@ -4,6 +4,11 @@ Garda Oracle deliberately separates offline model development from the small
 runtime application. The deployed dashboard contains no scikit-learn, pandas
 or NumPy.
 
+This document describes the current Garda application. The proposed
+multi-lake extraction, including shared contracts and the open-data licence
+firewall, is documented in
+[`platform-architecture.md`](platform-architecture.md).
+
 ## Live request flow
 
 ```mermaid
