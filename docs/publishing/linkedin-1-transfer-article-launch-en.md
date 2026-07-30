@@ -4,7 +4,7 @@
 
 Can the methodology behind a local wind forecast be transferred to another Alpine lake?
 
-I originally built a small forecasting system for the thermal wind at Walchensee. Lake Garda presented a very different setting: two wind regimes, Peler in the morning and Ora in the afternoon.
+I originally built [Walchi Thermic Oracle](https://walchensee.simon-stieber.de/), a small forecasting system for the thermal wind at Walchensee. Lake Garda presented a very different setting: two wind regimes, Peler in the morning and Ora in the afternoon.
 
 The finished model could not simply be reused. The process could:
 

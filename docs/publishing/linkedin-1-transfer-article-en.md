@@ -4,7 +4,7 @@
 
 ## The model did not transfer. The method did.
 
-Some time ago, I built a small forecasting system for Walchensee. The question behind it was deliberately practical:
+Some time ago, I built [Walchi Thermic Oracle](https://walchensee.simon-stieber.de/), a small forecasting system for Walchensee. The question behind it was deliberately practical:
 
 **Will the local thermal wind develop today, or will the trip to the lake be for nothing?**
 

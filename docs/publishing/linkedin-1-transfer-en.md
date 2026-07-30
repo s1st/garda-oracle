@@ -2,7 +2,7 @@
 
 *Working draft · English*
 
-Some time ago, I built a small forecasting system for the Walchensee. The question behind it was very practical: Will the local thermal wind develop today, or will the trip to the lake be for nothing?
+Some time ago, I built [Walchi Thermic Oracle](https://walchensee.simon-stieber.de/), a small forecasting system for Walchensee. The question behind it was very practical: Will the local thermal wind develop today, or will the trip to the lake be for nothing?
 
 Global weather models provide many of the ingredients: air pressure, cloud cover, solar radiation, and wind at different altitudes. What they do not provide directly is the local answer for one specific spot.
 
