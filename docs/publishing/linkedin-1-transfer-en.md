@@ -10,7 +10,7 @@ At Lake Garda, this led me to a new question:
 
 **Can this kind of method be transferred to a different thermal wind system?**
 
-Not the actual Walchensee model. The two lakes work too differently. At the Walchensee, the main phenomenon is a northward thermal wind driven by local topography and heating. At the northern end of Lake Garda, there are two characteristic regimes:
+Not the actual Walchensee model. The two lakes work too differently. At Walchensee, the main phenomenon is a local northerly thermal wind driven by topography and solar heating. At the northern end of Lake Garda, there are two characteristic regimes:
 
 - the Peler from northerly directions in the early morning;
 - the Ora from southerly directions in the afternoon.

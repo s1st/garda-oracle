@@ -20,7 +20,7 @@ When I started looking at Lake Garda, this led to a new question:
 
 Copying the finished Walchensee model was never a realistic option. The two lakes work too differently.
 
-At Walchensee, the main phenomenon is a northward thermal wind driven by local topography and heating. At the northern end of Lake Garda, two characteristic wind regimes shape the day:
+At Walchensee, the main phenomenon is a local northerly thermal wind driven by topography and solar heating. At the northern end of Lake Garda, two characteristic wind regimes shape the day:
 
 - **Peler**, which blows from northerly directions in the early morning;
 - **Ora**, which arrives from southerly directions in the afternoon.
