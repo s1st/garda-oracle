@@ -16,7 +16,7 @@ The finished model could not simply be reused. The process could:
 
 The first result surprised me: both Lake Garda models substantially outperformed a baseline based only on the month of the year.
 
-I wrote up the experiment, the validation approach, and what actually transferred in the first article of this series:
+I wrote up the experiment, the validation approach, and what actually transferred:
 
 [ADD LINKEDIN ARTICLE URL AFTER PUBLICATION]
 

@@ -82,15 +82,15 @@ For each forecast, it also explains which weather factors move the model most st
 
 The complete project is available on [GitHub](https://github.com/s1st/garda-oracle), including the model card, validation results, training pipeline, and known limitations.
 
-## The more important test comes next
+## From hindsight to a usable forecast
 
-These results answer the first question: the methodology transferred, and the models learned substantially more than monthly climatology.
+These results show that the methodology transferred and that the models learned substantially more than monthly climatology. But historical reanalysis describes past weather with information assembled after the event. A real forecast has access only to what was known beforehand.
 
-But they do not yet prove that the system works as an operational forecast. Historical reanalysis describes past weather with information assembled after the event. A real forecast has access only to what was known beforehand.
+I therefore ran a second test on 513 days from 2024 to 2026. The same ERA5-trained models were evaluated once with reanalysis fields and once with the actual forecast fields available on the previous day.
 
-The next article will therefore cover the decisive test:
+The signal survived that transition. Ora achieved a Peirce Skill Score of +0.59 with the previous day's forecast fields, while Peler reached +0.49. Neither regime showed the loss of discrimination I had expected.
 
-**Does the model retain its skill when it uses yesterday's actual forecast instead of weather reconstructed in hindsight?**
+That result is the main reason the experiment became a public forecast rather than remaining a retrospective notebook exercise.
 
 ---
 
