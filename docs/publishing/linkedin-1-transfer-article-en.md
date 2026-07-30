@@ -84,13 +84,13 @@ The complete project is available on [GitHub](https://github.com/s1st/garda-orac
 
 ## From hindsight to a usable forecast
 
-These results show that the methodology transferred and that the models learned substantially more than monthly climatology. But historical reanalysis describes past weather with information assembled after the event. A real forecast has access only to what was known beforehand.
+I used two experiments to answer two different questions.
 
-I therefore ran a second test on 513 days from 2024 to 2026. The same ERA5-trained models were evaluated once with reanalysis fields and once with the actual forecast fields available on the previous day.
+The first used reconstructed historical weather to ask whether Ora and Peler are predictably related to the day's atmospheric conditions at all. That established that a useful signal exists.
 
-The signal survived that transition. Ora achieved a Peirce Skill Score of +0.59 with the previous day's forecast fields, while Peler reached +0.49. Neither regime showed the loss of discrimination I had expected.
+The second replayed 513 days from 2024 to 2026 using the forecasts that had actually been available the day before. This asked whether normal forecast uncertainty destroys that signal in operational use.
 
-That result is the main reason the experiment became a public forecast rather than remaining a retrospective notebook exercise.
+It did not. Ora achieved a Peirce Skill Score of +0.59 with the previous day's forecast fields, while Peler reached +0.49. That result is the main reason the experiment became a public forecast rather than remaining a retrospective notebook exercise.
 
 ---
 
