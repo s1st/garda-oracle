@@ -108,8 +108,14 @@
 </section>
 {% endfor %}
 
-<p class="advanced-note" style="margin-top:24px">
-  <a href="/modell?lang={{ lang }}">{{ tr("model_quality_link") }}</a>
-  · <a href="/erklaerung?lang={{ lang }}">{{ tr("how_link") }}</a>
-</p>
+<section class="forecast-info" aria-labelledby="forecast-info-title">
+  <h2 id="forecast-info-title">{{ tr("index_info_title") }}</h2>
+  <p>{{ tr("index_info_1") | safe }}</p>
+  <p>{{ tr("index_info_2") }}</p>
+  <p>{{ tr("index_info_3") | safe }}</p>
+  <p class="advanced-note">
+    <a href="/modell?lang={{ lang }}">{{ tr("model_quality_link") }}</a>
+    · <a href="/erklaerung?lang={{ lang }}">{{ tr("how_link") }}</a>
+  </p>
+</section>
 {% endblock %}

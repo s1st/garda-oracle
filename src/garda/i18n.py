@@ -79,6 +79,28 @@ TEXT: dict[str, dict[str, str]] = {
         "close": "Schließen",
         "model_quality_link": "Wie gut ist das Modell?",
         "how_link": "Wie funktioniert das?",
+        "index_info_title": "Windvorhersage für Ora und Peler am Gardasee",
+        "index_info_1": (
+            "Garda Oracle erstellt eine aktuelle Drei-Tage-Windvorhersage für "
+            "<strong>Ora und Peler in Torbole am nördlichen Gardasee</strong>. Die Ora "
+            "ist der thermische Südwind, der an geeigneten Tagen gegen Mittag einsetzt "
+            "und den Nachmittag trägt. Der Peler ist ein Nordwind, der meist nachts "
+            "beginnt und bis in den Vormittag weht."
+        ),
+        "index_info_2": (
+            "Für die Prognose werden aktuelle Wettermodelle mit langjährigen "
+            "Windmessungen der Meteotrentino-Station in Torbole kombiniert. "
+            "Berücksichtigt werden unter anderem Druckunterschiede zwischen Alpen und "
+            "Po-Ebene, Sonneneinstrahlung, Bewölkung, Niederschlag und die großräumige "
+            "Höhenströmung."
+        ),
+        "index_info_3": (
+            "<strong>GO</strong>, <strong>MAYBE</strong> und <strong>NO GO</strong> "
+            "zeigen, wie wahrscheinlich ein nutzbarer Ora- oder Peler-Wind mit "
+            "mindestens ungefähr 8 Knoten Mittelwind ist. Die Vorhersage gilt in erster "
+            "Linie für Torbole; in Malcesine und anderen Bereichen des Gardasees können "
+            "die Bedingungen abweichen."
+        ),
         "history_title": "Verlauf",
         "history_lead": (
             "Die letzten 30 Tage: Was das Modell am Vorabend vorhergesagt hätte — "
@@ -320,6 +342,26 @@ TEXT: dict[str, dict[str, str]] = {
         "close": "Close",
         "model_quality_link": "How good is the model?",
         "how_link": "How does it work?",
+        "index_info_title": "Ora and Peler wind forecast for Lake Garda",
+        "index_info_1": (
+            "Garda Oracle provides a current three-day wind forecast for "
+            "<strong>Ora and Peler in Torbole on northern Lake Garda</strong>. Ora is "
+            "the thermal southerly wind that develops around midday on suitable days "
+            "and carries through the afternoon. Peler is a northerly wind that usually "
+            "starts at night and continues into the morning."
+        ),
+        "index_info_2": (
+            "The forecast combines current weather models with long-term wind "
+            "observations from the Meteotrentino station in Torbole. It considers "
+            "pressure differences between the Alps and the Po Valley, sunshine, cloud "
+            "cover, precipitation and the large-scale flow aloft."
+        ),
+        "index_info_3": (
+            "<strong>GO</strong>, <strong>MAYBE</strong> and <strong>NO GO</strong> "
+            "show the likelihood of usable Ora or Peler wind with an average speed of "
+            "about 8 knots or more. The forecast primarily applies to Torbole; "
+            "conditions may differ in Malcesine and other parts of Lake Garda."
+        ),
         "history_title": "History",
         "history_lead": (
             "The past 30 days: what the model would have forecast the evening before, "
@@ -561,6 +603,26 @@ TEXT: dict[str, dict[str, str]] = {
         "close": "Chiudi",
         "model_quality_link": "Quanto è affidabile il modello?",
         "how_link": "Come funziona?",
+        "index_info_title": "Previsioni di Ora e Peler sul Lago di Garda",
+        "index_info_1": (
+            "Garda Oracle offre previsioni aggiornate a tre giorni per "
+            "<strong>Ora e Peler a Torbole, sul Lago di Garda settentrionale</strong>. "
+            "L’Ora è il vento termico da sud che, nelle giornate favorevoli, si alza "
+            "verso mezzogiorno e soffia nel pomeriggio. Il Peler è un vento da nord che "
+            "di solito inizia di notte e continua fino al mattino."
+        ),
+        "index_info_2": (
+            "Le previsioni combinano modelli meteorologici aggiornati con molti anni di "
+            "misurazioni della stazione Meteotrentino di Torbole. Vengono considerati, "
+            "tra gli altri fattori, le differenze di pressione tra Alpi e Pianura "
+            "Padana, il soleggiamento, la nuvolosità, le precipitazioni e il flusso in quota."
+        ),
+        "index_info_3": (
+            "<strong>GO</strong>, <strong>MAYBE</strong> e <strong>NO GO</strong> "
+            "indicano la probabilità di un’Ora o un Peler utilizzabile, con una velocità "
+            "media di circa 8 nodi o più. La previsione vale soprattutto per Torbole; "
+            "a Malcesine e in altre zone del Lago di Garda le condizioni possono variare."
+        ),
         "history_title": "Andamento",
         "history_lead": (
             "Gli ultimi 30 giorni: ciò che il modello avrebbe previsto la sera prima, "
