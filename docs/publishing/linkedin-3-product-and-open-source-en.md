@@ -6,7 +6,7 @@ A model in a notebook is not yet a product.
 
 After the Ora and Peler experiments, I wanted an application I would actually use on my phone at the lake: fast, concise, and usable without meteorological expertise, but transparent enough that I would not have to trust a probability blindly.
 
-That became [Garda Oracle](https://garda.simon-stieber.de/go/linkedin).
+That became [Garda Oracle](https://garda.simon-stieber.de/go/linkedin-product).
 
 The home page shows two separate cards for today, tomorrow, and the day after:
 
@@ -49,7 +49,7 @@ What I am taking away from the project:
 4. Data licensing is part of the architecture.
 5. A small model with honest validation can be surprisingly useful for a specific decision.
 
-Live: <https://garda.simon-stieber.de/go/linkedin>
+Live: <https://garda.simon-stieber.de/go/linkedin-product>
 
 Repository: <https://github.com/s1st/garda-oracle>
 

@@ -5,6 +5,7 @@ Use the channel-specific URL when publishing:
 - Reddit: <https://garda.s1st.de/go/reddit>
 - Discord: <https://garda.simon-stieber.de/go/discord>
 - LinkedIn: <https://garda.simon-stieber.de/go/linkedin>
+- LinkedIn product article: <https://garda.simon-stieber.de/go/linkedin-product>
 - Windinfo: <https://garda.simon-stieber.de/go/windinfo>
 - SCA: <https://garda.simon-stieber.de/go/sca?lang=de>
 
