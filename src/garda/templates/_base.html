@@ -3,8 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}Garda Oracle{% endblock %}</title>
-{% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+<title>{% block title %}{{ seo_title }}{% endblock %}</title>
+<meta name="description" content="{{ seo_description }}">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="{{ canonical_url }}">
+{% for code, url in alternate_urls.items() %}<link rel="alternate" hreflang="{{ code }}" href="{{ url }}">
+{% endfor %}<link rel="alternate" hreflang="x-default" href="{{ alternate_urls.de }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Garda Oracle">
+<meta property="og:title" content="{{ seo_title }}">
+<meta property="og:description" content="{{ seo_description }}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:locale" content="{{ og_locale }}">
+{% for locale in alternate_locales %}<meta property="og:locale:alternate" content="{{ locale }}">
+{% endfor %}<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ seo_title }}">
+<meta name="twitter:description" content="{{ seo_description }}">
+<script type="application/ld+json">{{ structured_data | tojson }}</script>
 <style>
   :root {
     --bg: #0d1117;

@@ -1,5 +1,8 @@
 """Garda forecast: frozen-model golden vector, window semantics, origin gate."""
 import math
+import json
+import re
+import xml.etree.ElementTree as ET
 
 import pytest
 from fastapi.testclient import TestClient
@@ -262,6 +265,82 @@ def test_language_selector_persists_and_translates_static_pages(monkeypatch):
     assert "La pioggia indebolisce l’Ora" in r.text
     assert 'aria-label="Codice sorgente su GitHub"' in r.text
     assert "Codice sorgente pubblicato su" in r.text
+
+
+def test_seo_metadata_is_localized_and_canonical(monkeypatch):
+    monkeypatch.delenv("GARDA_GATE_SECRET", raising=False)
+    from garda.web import app
+
+    r = TestClient(app).get("/erklaerung?lang=it")
+    assert r.status_code == 200
+    assert "<title>Ora e Peler sul Lago di Garda spiegati | Garda Oracle</title>" in r.text
+    assert 'name="description" content="Scopri cosa sono Ora e Peler' in r.text
+    assert (
+        '<link rel="canonical" '
+        'href="https://garda.simon-stieber.de/erklaerung?lang=it">'
+    ) in r.text
+    assert (
+        '<link rel="alternate" hreflang="de" '
+        'href="https://garda.simon-stieber.de/erklaerung">'
+    ) in r.text
+    assert (
+        '<link rel="alternate" hreflang="en" '
+        'href="https://garda.simon-stieber.de/erklaerung?lang=en">'
+    ) in r.text
+    assert 'property="og:locale" content="it_IT"' in r.text
+    assert 'name="twitter:card" content="summary"' in r.text
+
+    match = re.search(
+        r'<script type="application/ld\+json">(.*?)</script>', r.text, re.DOTALL
+    )
+    assert match is not None
+    structured_data = json.loads(match.group(1))
+    assert structured_data["@type"] == "WebApplication"
+    assert structured_data["applicationCategory"] == "WeatherApplication"
+    assert structured_data["inLanguage"] == "it"
+
+
+def test_campaign_url_canonicalizes_to_localized_homepage(monkeypatch):
+    monkeypatch.delenv("GARDA_GATE_SECRET", raising=False)
+    from garda import web
+
+    async def no_forecast():
+        return {}
+
+    async def no_live_data():
+        return None
+
+    monkeypatch.setattr(web, "_forecast_points", no_forecast)
+    monkeypatch.setattr(web, "_live_torbole", no_live_data)
+    monkeypatch.setattr(web, "build_day_features", lambda points, day: None)
+
+    r = TestClient(web.app).get("/go/reddit?lang=en")
+    assert (
+        '<link rel="canonical" href="https://garda.simon-stieber.de/?lang=en">'
+    ) in r.text
+
+
+def test_robots_and_sitemap_use_public_host(monkeypatch):
+    monkeypatch.setenv("GARDA_GATE_SECRET", "s3cret")
+    from garda.web import app
+
+    client = TestClient(app)
+    robots = client.get("/robots.txt", headers={"host": "garda.s1st.de"})
+    assert robots.status_code == 200
+    assert robots.headers["content-type"].startswith("text/plain")
+    assert "Sitemap: https://garda.s1st.de/sitemap.xml" in robots.text
+
+    sitemap = client.get("/sitemap.xml", headers={"host": "garda.s1st.de"})
+    assert sitemap.status_code == 200
+    assert sitemap.headers["content-type"].startswith("application/xml")
+    root = ET.fromstring(sitemap.text)
+    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    urls = root.findall("sm:url", namespace)
+    assert len(urls) == 12
+    locations = {entry.find("sm:loc", namespace).text for entry in urls}
+    assert "https://garda.s1st.de/" in locations
+    assert "https://garda.s1st.de/modell?lang=en" in locations
+    assert "https://garda.s1st.de/erklaerung?lang=it" in locations
 
 
 def test_legacy_beta_code_does_not_gate_public_site(monkeypatch):

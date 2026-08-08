@@ -51,6 +51,14 @@ _LANG_COOKIE = "garda_lang"
 _LANG_COOKIE_TTL = 365 * 24 * 3600
 _PSEUDONYMOUS_HOST = "garda.s1st.de"
 _REAL_NAME_HOST = "garda.simon-stieber.de"
+_INDEXABLE_PATHS = ("/", "/verlauf", "/modell", "/erklaerung")
+_SEO_KEYS = {
+    "index": ("seo_index_title", "seo_index_description"),
+    "verlauf": ("seo_history_title", "seo_history_description"),
+    "modell": ("seo_model_title", "seo_model_description"),
+    "erklaerung": ("seo_explanation_title", "seo_explanation_description"),
+}
+_OG_LOCALES = {"de": "de_DE", "en": "en_GB", "it": "it_IT"}
 
 
 def _request_host(request: Request) -> str:
@@ -83,11 +91,39 @@ def _remember_language(response: Response, request: Request, lang: str) -> Respo
 def _page_context(request: Request, active: str, **values) -> dict:
     lang = _request_language(request)
     pseudonymous = _is_pseudonymous_host(request)
+    host = _PSEUDONYMOUS_HOST if pseudonymous else _REAL_NAME_HOST
+    path = "/" if active == "index" else request.url.path
+    base_url = f"https://{host}{path}"
+    alternate_urls = {
+        code: base_url if code == DEFAULT_LANG else f"{base_url}?lang={code}"
+        for code in SUPPORTED_LANGS
+    }
+    title_key, description_key = _SEO_KEYS[active]
+    canonical_url = alternate_urls[lang]
     return {
         "active": active,
         "lang": lang,
         "langs": SUPPORTED_LANGS,
         "current_path": request.url.path,
+        "canonical_url": canonical_url,
+        "alternate_urls": alternate_urls,
+        "seo_title": translate(lang, title_key),
+        "seo_description": translate(lang, description_key),
+        "og_locale": _OG_LOCALES[lang],
+        "alternate_locales": [
+            locale for code, locale in _OG_LOCALES.items() if code != lang
+        ],
+        "structured_data": {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Garda Oracle",
+            "url": canonical_url,
+            "description": translate(lang, description_key),
+            "applicationCategory": "WeatherApplication",
+            "operatingSystem": "Any",
+            "inLanguage": lang,
+            "isAccessibleForFree": True,
+        },
         "show_personal_link": not pseudonymous,
         "manual_analytics": pseudonymous,
         "walchensee_url": (
@@ -97,6 +133,11 @@ def _page_context(request: Request, active: str, **values) -> dict:
         "num": partial(format_number, lang),
         **values,
     }
+
+
+def _public_base_url(request: Request) -> str:
+    host = _PSEUDONYMOUS_HOST if _is_pseudonymous_host(request) else _REAL_NAME_HOST
+    return f"https://{host}"
 
 
 @app.middleware("http")
@@ -256,11 +297,6 @@ async def index(request: Request):
             "index",
             days=days,
             live=live,
-            canonical_url=(
-                f"https://{_PSEUDONYMOUS_HOST}/"
-                if _is_pseudonymous_host(request)
-                else f"https://{_REAL_NAME_HOST}/"
-            ),
         ),
     )
 
@@ -306,6 +342,39 @@ async def modell(request: Request):
     return templates.TemplateResponse(
         request, "modell.html", _page_context(request, "modell")
     )
+
+
+@app.get("/robots.txt", include_in_schema=False)
+async def robots(request: Request):
+    body = f"User-agent: *\nAllow: /\nSitemap: {_public_base_url(request)}/sitemap.xml\n"
+    return Response(content=body, media_type="text/plain")
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap(request: Request):
+    base_url = _public_base_url(request)
+    entries = []
+    for path in _INDEXABLE_PATHS:
+        page_url = f"{base_url}{path}"
+        alternates = "".join(
+            f'<xhtml:link rel="alternate" hreflang="{code}" href="'
+            f'{page_url if code == DEFAULT_LANG else f"{page_url}?lang={code}"}"/>'
+            for code in SUPPORTED_LANGS
+        )
+        alternates += (
+            f'<xhtml:link rel="alternate" hreflang="x-default" href="{page_url}"/>'
+        )
+        for code in SUPPORTED_LANGS:
+            url = page_url if code == DEFAULT_LANG else f"{page_url}?lang={code}"
+            entries.append(f"<url><loc>{url}</loc>{alternates}</url>")
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+        'xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+        + "".join(entries)
+        + "</urlset>"
+    )
+    return Response(content=body, media_type="application/xml")
 
 
 @app.get("/health")
