@@ -88,7 +88,7 @@ Five lessons from building Garda Oracle have become particularly useful to me:
 
 Garda Oracle is live here:
 
-https://garda.simon-stieber.de/go/linkedin-product
+https://garda.simon-stieber.de/go/linkedin
 
 The complete source, model card, tests, and training pipeline are available on GitHub:
 
