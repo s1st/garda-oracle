@@ -1,0 +1,69 @@
+Building Garda Oracle: from notebook to a forecast I can use at the lake
+
+A MODEL I WOULD ACTUALLY USE
+
+After validating the Peler and Ora models, I wanted to turn them into something I could use on my phone at Lake Garda.
+
+At the lake, I do not want a notebook or a page full of weather charts. I want to know whether Peler is likely in the morning and whether Ora is likely in the afternoon.
+
+Garda Oracle shows exactly that: two forecast cards for today, tomorrow, and the day after. Each card gives a GO, MAYBE, or NO GO assessment together with a probability.
+
+Peler and Ora remain separate because they are different wind systems. They occur at different times, come from different directions, and react differently to the weather. A generic “wind forecast” would lose that distinction.
+
+The interface is available in English, German, and Italian and is intentionally compact enough for a phone.
+
+WHAT IS BEHIND THE PROBABILITY?
+
+A probability alone was not enough for me. I wanted to see why the model leaned one way or the other on a particular day.
+
+Opening a card shows the strongest positive and negative contributions. Depending on the day, these may include the pressure distribution around the Alps, solar radiation, cloud cover, precipitation, humidity, or wind at 100 metres.
+
+The models are logistic regressions, so these contributions can be calculated directly from the inputs and coefficients. They explain the model's calculation, not the atmosphere itself. A strong contribution is not proof that one factor caused or prevented the wind.
+
+That distinction is also explained in the interface. I would rather show a modest explanation with clear limits than make a simple model look more certain than it is.
+
+THE BORING BUT IMPORTANT PART
+
+Training code and production code can easily drift apart. A time window changes in one place, a pressure difference uses the opposite station order, or missing values are handled differently. The website still produces a number, but it is no longer the model that was tested.
+
+To avoid that, Garda Oracle uses the same feature builder during offline training and in the live application. Time windows, pressure differences, and derived weather signals are implemented once.
+
+There is also a golden-vector test: a known set of inputs must always produce the expected model output. If a code change alters the calculation, the test catches it.
+
+None of this is visible on the forecast page, but it gives me more confidence than another dashboard widget would.
+
+KEEPING THE SERVICE SMALL
+
+I train the models offline with scikit-learn. For the live service, I export the means, standard deviations, coefficients, calibration parameters, and thresholds as plain Python data.
+
+Inference then consists of scaling the inputs, calculating a dot product, and applying a logistic function. The deployed application needs neither scikit-learn nor pandas nor NumPy.
+
+The rest of the stack is small as well:
+
+• FastAPI and Jinja2 for the application
+• Open-Meteo for forecast fields
+• Meteotrentino station T0193 for observations
+• Cloud Run for the stateless service
+• a 30-minute forecast cache and a five-minute live-wind cache
+
+OPENING THE REPOSITORY
+
+Publishing the project also meant sorting out things that are easy to ignore in a private notebook.
+
+The repository documents the data licences and attribution requirements. It does not contain the raw source datasets; instead, it contains the code needed to fetch the data, derive the Peler and Ora labels, train and validate the models, and export the parameters used by the website.
+
+The model card records the limitations too. One station in Torbole cannot represent the whole northern lake. The historical labels capture wind direction and average speed, not gust quality or whether a session was safe. Garda Oracle is not an official weather or safety forecast.
+
+For me, these details are part of the product. The useful result is not only the forecast page, but a path that can be followed from public measurements to the probability shown on screen.
+
+Garda Oracle is live here:
+
+https://garda.simon-stieber.de/go/linkedin
+
+Source code, model card, tests, and training pipeline:
+
+https://github.com/s1st/garda-oracle
+
+My earlier article about transferring the forecasting method from Walchensee to Lake Garda:
+
+[ADD LINK TO FIRST LINKEDIN ARTICLE]

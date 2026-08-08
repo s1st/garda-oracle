@@ -9,6 +9,26 @@ DEFAULT_LANG = "de"
 
 TEXT: dict[str, dict[str, str]] = {
     "de": {
+        "seo_index_title": "Gardasee-Windvorhersage für Ora & Peler | Garda Oracle",
+        "seo_index_description": (
+            "Aktuelle Drei-Tage-Windvorhersage für Ora und Peler in Torbole am "
+            "Gardasee – mit Live-Wind, Wahrscheinlichkeiten und erklärenden Wetterfaktoren."
+        ),
+        "seo_history_title": "Ora- & Peler-Verlauf der letzten 30 Tage | Garda Oracle",
+        "seo_history_description": (
+            "Vergleiche die Ora- und Peler-Prognosen der letzten 30 Tage mit den "
+            "Windmessungen aus Torbole am Gardasee."
+        ),
+        "seo_model_title": "Treffsicherheit der Gardasee-Windvorhersage | Garda Oracle",
+        "seo_model_description": (
+            "Erfahre, wie zuverlässig Garda Oracle Ora und Peler vorhersagt – mit "
+            "Rückrechnungen, Kreuzvalidierung und transparenten Modellgrenzen."
+        ),
+        "seo_explanation_title": "Ora und Peler am Gardasee erklärt | Garda Oracle",
+        "seo_explanation_description": (
+            "Was Ora und Peler sind, wann die Gardasee-Winde entstehen und welche "
+            "Wetterfaktoren die Windvorhersage für Torbole bestimmen."
+        ),
         "nav_forecast": "Vorhersage",
         "nav_history": "Verlauf",
         "nav_model": "Modell",
@@ -231,6 +251,26 @@ TEXT: dict[str, dict[str, str]] = {
         "quality_link": "Mehr zur Modellgüte und Treffsicherheit",
     },
     "en": {
+        "seo_index_title": "Lake Garda wind forecast for Ora & Peler | Garda Oracle",
+        "seo_index_description": (
+            "Current three-day Ora and Peler wind forecast for Torbole on Lake Garda, "
+            "with live wind, probabilities and explanations of the key weather factors."
+        ),
+        "seo_history_title": "30-day Ora & Peler forecast history | Garda Oracle",
+        "seo_history_description": (
+            "Compare the last 30 days of Ora and Peler forecasts with measured wind "
+            "conditions in Torbole on Lake Garda."
+        ),
+        "seo_model_title": "Lake Garda wind forecast performance | Garda Oracle",
+        "seo_model_description": (
+            "See how reliably Garda Oracle predicts Ora and Peler, with hindcasts, "
+            "cross-validation and transparent model limitations."
+        ),
+        "seo_explanation_title": "Ora and Peler winds on Lake Garda explained | Garda Oracle",
+        "seo_explanation_description": (
+            "Learn what Ora and Peler are, when these Lake Garda winds develop and which "
+            "weather factors shape the Torbole wind forecast."
+        ),
         "nav_forecast": "Forecast",
         "nav_history": "History",
         "nav_model": "Model",
@@ -451,6 +491,26 @@ TEXT: dict[str, dict[str, str]] = {
         "quality_link": "More about model skill and performance",
     },
     "it": {
+        "seo_index_title": "Previsioni vento Lago di Garda: Ora e Peler | Garda Oracle",
+        "seo_index_description": (
+            "Previsioni a tre giorni di Ora e Peler per Torbole sul Lago di Garda, con "
+            "vento in tempo reale, probabilità e spiegazione dei fattori meteorologici."
+        ),
+        "seo_history_title": "Storico Ora e Peler degli ultimi 30 giorni | Garda Oracle",
+        "seo_history_description": (
+            "Confronta le previsioni di Ora e Peler degli ultimi 30 giorni con il vento "
+            "misurato a Torbole sul Lago di Garda."
+        ),
+        "seo_model_title": "Affidabilità delle previsioni vento Garda | Garda Oracle",
+        "seo_model_description": (
+            "Scopri quanto sono affidabili le previsioni di Ora e Peler di Garda Oracle, "
+            "con analisi storiche, validazione e limiti del modello."
+        ),
+        "seo_explanation_title": "Ora e Peler sul Lago di Garda spiegati | Garda Oracle",
+        "seo_explanation_description": (
+            "Scopri cosa sono Ora e Peler, quando nascono questi venti del Lago di Garda "
+            "e quali fattori determinano le previsioni per Torbole."
+        ),
         "nav_forecast": "Previsione",
         "nav_history": "Andamento",
         "nav_model": "Modello",

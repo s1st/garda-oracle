@@ -73,6 +73,8 @@ Im dritten Teil zeige ich, wie aus diesen Experimenten eine kleine öffentliche
 Anwendung wurde – mit erklärbaren Prognosen, drei Sprachen und einem
 Open-Source-Trainingspfad.
 
+Repository: <https://github.com/s1st/garda-oracle>
+
 ---
 
 ## Suggested media

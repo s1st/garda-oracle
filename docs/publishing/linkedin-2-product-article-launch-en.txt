@@ -1,0 +1,5 @@
+After the modelling work, I wanted Garda Oracle on my phone at the lake.
+
+This follow-up is about the less glamorous parts of getting it there: keeping training and production consistent, explaining a probability without overselling it, deploying a small runtime, and publishing a reproducible open-source project.
+
+The result is a forecast I can use—and a calculation I can trace from public measurements to the number on screen.
