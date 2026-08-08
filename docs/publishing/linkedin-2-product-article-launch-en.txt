@@ -1,9 +1,5 @@
-What turns a machine-learning experiment into a product you can actually trust?
+After the modelling work, I wanted Garda Oracle on my phone at the lake.
 
-For Garda Oracle, the difficult part was not putting a wind probability on a webpage.
+This follow-up is about the less glamorous parts of getting it there: keeping training and production consistent, explaining a probability without overselling it, deploying a small runtime, and publishing a reproducible open-source project.
 
-It was making sure that training, production, explanations, validation, and data licensing all described the same model.
-
-In this follow-up article, I look at the less visible engineering behind the forecast: a shared feature pipeline, exact model contributions, a minimal production runtime, reproducible training, and explicit limitations.
-
-The result is a small open-source application I can use on my phone at the lake—and inspect all the way from public measurements to the delivered probability.
+The result is a forecast I can use—and a calculation I can trace from public measurements to the number on screen.

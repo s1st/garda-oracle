@@ -1,99 +1,69 @@
-From weather model to public product: building Garda Oracle
+Building Garda Oracle: from notebook to a forecast I can use at the lake
 
-A MODEL IN A NOTEBOOK IS NOT YET A PRODUCT
+A MODEL I WOULD ACTUALLY USE
 
-The first version of Garda Oracle answered a modelling question: can the local Peler and Ora wind regimes at Lake Garda be predicted from large-scale weather data?
+After validating the Peler and Ora models, I wanted to turn them into something I could use on my phone at Lake Garda.
 
-Once the answer looked promising, a different question became more important:
+At the lake, I do not want a notebook or a page full of weather charts. I want to know whether Peler is likely in the morning and whether Ora is likely in the afternoon.
 
-What would it take to turn that experiment into a small public application I would actually trust and use at the lake?
+Garda Oracle shows exactly that: two forecast cards for today, tomorrow, and the day after. Each card gives a GO, MAYBE, or NO GO assessment together with a probability.
 
-Putting a probability on a webpage is easy. Making sure that training, production, explanations, data licensing, and validation all describe the same model is the harder part.
+Peler and Ora remain separate because they are different wind systems. They occur at different times, come from different directions, and react differently to the weather. A generic “wind forecast” would lose that distinction.
 
-DESIGNING FOR THE DECISION
+The interface is available in English, German, and Italian and is intentionally compact enough for a phone.
 
-At the lake, I do not want to inspect a machine-learning notebook. I want a quick answer for a specific decision: is Peler likely in the early morning, and is Ora likely in the afternoon?
+WHAT IS BEHIND THE PROBABILITY?
 
-Garda Oracle therefore shows two separate forecast cards for today, tomorrow, and the day after. Each card contains a GO, MAYBE, or NO GO assessment and the corresponding probability.
+A probability alone was not enough for me. I wanted to see why the model leaned one way or the other on a particular day.
 
-The distinction between Peler and Ora matters. They occur at different times, arrive from different directions, and respond differently to the weather situation. Combining them into a generic “wind forecast” would hide the question the model is actually trying to answer.
+Opening a card shows the strongest positive and negative contributions. Depending on the day, these may include the pressure distribution around the Alps, solar radiation, cloud cover, precipitation, humidity, or wind at 100 metres.
 
-The interface is available in English, German, and Italian. It is deliberately compact enough for a phone, but it does not ask the user to trust a number blindly.
+The models are logistic regressions, so these contributions can be calculated directly from the inputs and coefficients. They explain the model's calculation, not the atmosphere itself. A strong contribution is not proof that one factor caused or prevented the wind.
 
-EXPLAINING A PROBABILITY
+That distinction is also explained in the interface. I would rather show a modest explanation with clear limits than make a simple model look more certain than it is.
 
-Opening a forecast card reveals the factors that move the model most strongly towards or away from a favourable outcome on that day.
+THE BORING BUT IMPORTANT PART
 
-Depending on the forecast, those factors may include the pressure distribution around the Alps, solar radiation, cloud cover, precipitation, humidity, or wind at 100 metres.
+Training code and production code can easily drift apart. A time window changes in one place, a pressure difference uses the opposite station order, or missing values are handled differently. The website still produces a number, but it is no longer the model that was tested.
 
-Because the underlying models are logistic regressions, these contributions can be calculated exactly. The application can show which standardised input values changed the model score most strongly.
+To avoid that, Garda Oracle uses the same feature builder during offline training and in the live application. Time windows, pressure differences, and derived weather signals are implemented once.
 
-That still does not prove causality. A contribution explains the model's calculation, not the atmosphere itself. The interface therefore describes both the physical interpretation of a factor and the limits of the explanation.
+There is also a golden-vector test: a known set of inputs must always produce the expected model output. If a code change alters the calculation, the test catches it.
 
-Explainability here is not a decorative chart added after training. It is a consequence of choosing a model and pipeline whose calculations can be traced from input to output.
+None of this is visible on the forecast page, but it gives me more confidence than another dashboard widget would.
 
-ONE FEATURE PIPELINE, NOT TWO
+KEEPING THE SERVICE SMALL
 
-One of the easiest ways to introduce silent errors into a machine-learning product is to calculate features differently during training and production.
+I train the models offline with scikit-learn. For the live service, I export the means, standard deviations, coefficients, calibration parameters, and thresholds as plain Python data.
 
-A pressure difference might use another station order. A time window might be shifted by an hour. Missing values might be handled differently. The model would still return a probability, but it would no longer be the model that was evaluated.
+Inference then consists of scaling the inputs, calculating a dot product, and applying a logistic function. The deployed application needs neither scikit-learn nor pandas nor NumPy.
 
-Garda Oracle avoids this by using the same feature builder for offline training and the live website. Time windows, pressure differences, and derived weather signals are implemented once.
-
-A golden-vector test adds another guardrail: one known input is paired with its expected model output. If an implementation change silently alters the calculation, the test fails.
-
-This is less visible than the forecast cards, but it is one of the most important parts of the system.
-
-A SMALL PRODUCTION RUNTIME
-
-The models are trained offline with scikit-learn. The public service does not need to carry the training stack with it.
-
-Means, standard deviations, coefficients, calibration parameters, and decision thresholds are exported as plain Python data. At runtime, inference is reduced to scaling the inputs, calculating a dot product, and applying a logistic function.
-
-The deployed application therefore needs neither scikit-learn nor pandas nor NumPy.
-
-The rest of the stack is intentionally modest:
+The rest of the stack is small as well:
 
 • FastAPI and Jinja2 for the application
 • Open-Meteo for forecast fields
-• Meteotrentino station T0193 for current and historical observations
-• a 30-minute cache for forecasts and a five-minute cache for live wind
-• Cloud Run as a stateless service
+• Meteotrentino station T0193 for observations
+• Cloud Run for the stateless service
+• a 30-minute forecast cache and a five-minute live-wind cache
 
-Keeping the runtime small reduces deployment complexity without changing the evaluated model.
+OPENING THE REPOSITORY
 
-OPEN SOURCE MEANS MORE THAN PUBLISHING CODE
+Publishing the project also meant sorting out things that are easy to ignore in a private notebook.
 
-Making the repository public required more than choosing a licence and writing a README.
+The repository documents the data licences and attribution requirements. It does not contain the raw source datasets; instead, it contains the code needed to fetch the data, derive the Peler and Ora labels, train and validate the models, and export the parameters used by the website.
 
-The project documents the licences and attribution requirements of its data sources. Raw source datasets are not committed to the repository. Instead, the repository provides a reproducible path for fetching data, deriving Peler and Ora labels, training the models, validating them, and exporting the serving parameters.
+The model card records the limitations too. One station in Torbole cannot represent the whole northern lake. The historical labels capture wind direction and average speed, not gust quality or whether a session was safe. Garda Oracle is not an official weather or safety forecast.
 
-The model card records not only performance but also limitations and negative results. A single measurement station in Torbole cannot represent the entire northern lake. Historical labels describe wind direction and average speed, not gust quality or whether a session was safe. The output is not an official weather or safety forecast.
-
-These constraints are part of the product, not footnotes to hide after deployment.
-
-WHAT I TOOK AWAY FROM THE PROJECT
-
-Five lessons from building Garda Oracle have become particularly useful to me:
-
-1. Start with a precise local decision, not with a model architecture.
-
-2. Test whether a signal survives the move from reconstructed weather to real forecast inputs.
-
-3. Explainability starts with a consistent data pipeline, not with a tooltip.
-
-4. Data licensing and reproducibility are architectural concerns.
-
-5. A small, transparent model with honest validation can be more useful than a more complex system whose behaviour is difficult to trace.
+For me, these details are part of the product. The useful result is not only the forecast page, but a path that can be followed from public measurements to the probability shown on screen.
 
 Garda Oracle is live here:
 
 https://garda.simon-stieber.de/go/linkedin
 
-The complete source, model card, tests, and training pipeline are available on GitHub:
+Source code, model card, tests, and training pipeline:
 
 https://github.com/s1st/garda-oracle
 
-The earlier article about transferring the forecasting method from Walchensee to Lake Garda:
+My earlier article about transferring the forecasting method from Walchensee to Lake Garda:
 
 [ADD LINK TO FIRST LINKEDIN ARTICLE]
